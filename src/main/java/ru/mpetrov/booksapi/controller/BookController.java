@@ -7,6 +7,8 @@ import ru.mpetrov.booksapi.domain.Book;
 import ru.mpetrov.booksapi.exceptions.BookNotFoundException;
 import ru.mpetrov.booksapi.repository.BookRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class BookController {
@@ -18,8 +20,11 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<Iterable<Book>> all() {
-        return ResponseEntity.ok(bookRepository.findAll());
+    public ResponseEntity<Iterable<Book>> getAllBooks(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String author) {
+        List<Book> list = bookRepository.findByNameContainingAndAuthorContaining(name, author);
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/books")
